@@ -1,1 +1,62 @@
 
+Automated synapse detection from electron microscopy. 
+cjpark147@skku.edu
+
+Requires:
+- Caffe 
+- Electron microscope images
+- 3D Neuron segmentation 
+- Cell type info
+
+Generates:
+- synaptic cleft & vesicle cloud predictions by SC-Net and VC-Net 
+- all & relevant interface volume extracted from neuron segmentation
+- vesicle cloud segmentation by watershed algorithm
+
+Steps:
+(1) Forward pass EM subvolumes to trained SC-Net and VC-Net (deployment)
+(2) Create relevant interface subvolumes and neuronal boundary subvolumes.
+(3) Assemble the outputs from (1) and (2).
+(4) Segment vesicle clouds using watershed algorithm (should aim for minimal false negative number)
+(5) Feed SC-Net outputs to a trained SVM to predict synapses. 
+(6) Match cleft-positive interfaces with vesicle segments and drop vesicle-unmatched interfaces.  
+(7) Save the list of detected synapses in text file having the following columns:
+	{interface id, pre-syn neuron id, post-syn neuron id, pre-syn type, post-syn type, size, contact-point-(x,y,z), bounding-box-stp, bounding-box-enp}
+
+
+<MAIN CODES>
+(1) data_manager.m
+(2) classifier.m
+
+ - "data_manager" prepares all datasets required for synapse detection. 
+ - "classifier" uses the datasets to classify interfaces. It outputs synapse information as text file.   
+
+
+Edit configuration files before employing data_manager. 
+	(1) cfg_cleft.txt
+	(2) cfg_vesicle.txt
+
+
+Forward job: crop-and-save channel images having size: size_of_output_cube + 1/2 * fwd_net_fov.
+	It will check computation nodes if there exist idle GPUs every certain time period, and if there exists, it will start forwarding using the idle GPU. 
+	Channel cubes overlap, forward input cubes overlap by the size of FOV, but forward output cubes are set to not overlap.
+	If u-net output size is (44,44,12), good choice for "size_of_output_cube" is (44*k, 44*l,12*m) where k,l,m are positive integers.
+
+
+After creating an interface volume, please reassign interface ID to avoid gaps in the id list.
+
+<VESICLE SEGMENTATION>
+(1) run create_affinity_graph.m
+(2) run segment_vesicle_cloud.m (specify 'matrix' or 'file')
+
+
+<ACCURACY>
+You can change the SVM classification threshold to make a trade-off between precision and recall. 
+You can also change watershed parameters to make a trade-off between precision and recall. 
+
+
+
+
+
+
+
