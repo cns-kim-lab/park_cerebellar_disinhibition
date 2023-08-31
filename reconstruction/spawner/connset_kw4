@@ -1,0 +1,5 @@
+mysql_code_path: /data/research/bahn/code/mysql/
+server: kimworkstation04
+user: root
+password: 1234
+database: omni
