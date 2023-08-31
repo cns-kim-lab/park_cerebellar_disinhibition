@@ -5,6 +5,9 @@
 #### edited by jwgim@kbri.re.kr
 
 
+visualize and edit neuronal fragments(or whole cell)
+
+
 ### __Dependencies__
 
 libboost v1.54
