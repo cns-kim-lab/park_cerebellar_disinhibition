@@ -3,7 +3,7 @@
 #### jwgim@kbri.re.kr
 
 
-This codeset is for semi-automated parallel fiber reconstruction. It requires config file same with in the __volume_generator__(../volume_generator).
+This codeset is for semi-automated parallel fiber reconstruction. It requires config file same with in the __volume_generator__.
 
 
 ### __Steps__
