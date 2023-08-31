@@ -3,7 +3,7 @@
 #### jwgim@kbri.re.kr
 
 
-This codeset is for semi-automated parallel fiber reconstruction. It requires config file same with in the __volume_generator__.
+This codeset is for semi-automated parallel fiber reconstruction. It requires config file same with in the __volume_generator__(https://github.com/jawonGim/park_cerebellar_disinhibition/tree/main/reconstruction/volume_generator).
 
 
 ### __Steps__
