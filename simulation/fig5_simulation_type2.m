@@ -35,22 +35,21 @@ for i = 1:ntrial
             y_in_absent(j,:) = y_in_absent(j,:) + (-1*double_exp(t-timing_pf(j), 1, -1, a, b));
         end
     end
-   y_in_absent(1,:) = y_in_absent(1,:) + (-1*double_exp(t-2.5, 1, -1, a, b));   % motif 4 
-
+    y_in_absent(1,:) = y_in_absent(1,:) + (-1*double_exp(t-2.5, 1, -1, a, b));   % motif 4 
+    
     % IN2-IN1 delay
     inin_delay = delay/dt; 
     y_in2_absent_delay = [zeros(1,inin_delay), y_in_absent(2,1:end-inin_delay)];      
     
     % Total IN input to PC when CF-IN2 is absent       
-    y_in1_node1 = rect(y_in_absent(1,:) - y_in2_absent_delay, -1);
-    y_in_total_absent = y_in1_node1;
+    y_in_total_absent = rect(y_in_absent(1,:) - y_in2_absent_delay, -1);
         
     % IN1-PC delay
     inpc_delay = delay/dt; 
     y_in_total_absent_delay = [zeros(1,inpc_delay), y_in_total_absent(1:end-inpc_delay)];    
 
     % CF,PF overlap area when CF-IN2 is absent
-    y_cf_truncated1 = rect(y_cf + y_in_total_absent, 1);
+    y_cf_truncated1 = rect(y_cf + y_in_total_absent_delay, 1);
     y_cf_shapes1(i,:) = y_cf_truncated1;
     area_union = trapz(max(y_pf, y_cf_truncated1));
     A1 = rect(y_pf - y_cf_truncated1, 1);
@@ -84,15 +83,23 @@ for i = 1:ntrial
             y_in_present(j,:) = y_in_present(j,:) + (-1*double_exp(t-timing_pf(j), 1, -1, a, b));
         end
     end    
+    
     y_in_present(1,:) = y_in_present(1,:) + (-1*double_exp(t-2.5, 1, -1, a, b)); % motif 4
-    y_in_present(2,:) = y_in_present(2,:) + (-1*double_exp(t-2.5, 1, -1, a, b)); % CF-IN2
-    y_in1_node1_present = rect(y_in_present(1,:) - y_in_present(2,:), -1);
-
+    y_in_present(2,:) = y_in_present(2,:) + (-1*double_exp(t-delay, 1, -1, a, b)); % CF-IN2
+        
+    % IN2-IN1 delay
+    inin_delay = delay/dt;
+    y_in2_present_delay = [zeros(1,inin_delay), y_in_present(2,1:end-inin_delay)];
+    
     % Total IN input to PC when CF-IN2 is present      
-    y_in_total_present = y_in1_node1_present;
+    y_in_total_present = rect(y_in_present(1,:) - y_in2_present_delay, -1);
+    
+    % IN1-PC delay
+    inpc_delay = delay/dt;
+    y_in_total_present_delay = [zeros(1,inpc_delay), y_in_total_present(1:end-inpc_delay)];    
              
     % CF,PF overlap area when CF-IN2 is present
-    y_cf_truncated2 = rect(y_cf + y_in_total_present, 1);
+    y_cf_truncated2 = rect(y_cf + y_in_total_present_delay, 1);
     y_cf_shapes2(i,:) = y_cf_truncated2;
     area_union = trapz(max(y_pf, y_cf_truncated2));
     A1 = rect(y_pf - y_cf_truncated2, 1);
@@ -124,15 +131,15 @@ violin_data = [violin_data; [ones(numel(overlap_area_present),1)*2, overlap_area
 violin_data(:,2) = violin_data(:,2) / max_overlap;
 vp = violinplot(violin_data(:,2), violin_data(:,1), 'ViolinColor', [255,75,75]/255);
 vp(2).ViolinColor = [100,250,120]/255;
-violin_data_mtf134= violin_data;
+violin_data_type2= violin_data;
 set(gcf, 'color', 'w'); set(gca,'FontSize',24);
 ylabel('PF,CF overlap area'); set(gca,'FontSize',19); set(gcf,'color','w');
 %legend([h1,h2], {'CF-IN2 absent', 'CF-IN2 present'}, 'Location', 'north');
 %}
 
 
-%% Example activity curves when CF-IN2 is absent
-%{
+%% Example activity curves when CF-IN2 is absent/present
+
 dt = 0.1;
 t = -5:dt:25;
 t2 = -5:dt:16; % for plot
@@ -180,7 +187,7 @@ for i = 1:ntrial
     y_in_total_absent_delay = [zeros(1,inpc_delay), y_in_total_absent(1:end-inpc_delay)];    
 
     % CF,PF overlap area when CF-IN2 is absent
-    y_cf_truncated1 = rect(y_cf + y_in_total_absent, 1);
+    y_cf_truncated1 = rect(y_cf + y_in_total_absent_delay, 1);
     y_cf_shapes1(i,:) = y_cf_truncated1;
     area_union = trapz(max(y_pf, y_cf_truncated1));
     A1 = rect(y_pf - y_cf_truncated1, 1);
