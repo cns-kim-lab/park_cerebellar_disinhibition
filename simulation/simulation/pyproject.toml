@@ -1,0 +1,40 @@
+[project]
+name = "mlinet"
+version = "0.1.0"
+description = "Simulation component for PC-IN simulation"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Sungho Hong, Center for Cognition and Sociality, IBS, South Korea" }
+]
+dependencies = [
+    "pandas",
+    "numpy",
+    "scipy",
+    "mpi4py",
+    "omegaconf",
+    "hydra-core",
+    "pyyaml",
+    "networkx",
+    "tqdm",
+    "setuptools>=80.9.0",
+    "neuron>=8.2.2",
+    "matplotlib",
+    "ipykernel",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+]
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
